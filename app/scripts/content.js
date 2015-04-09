@@ -1,2 +1,2 @@
 var html = document.querySelector('html');
-html.style.webkitFontSmoothing = "antialiased";
+html.style.webkitFontSmoothing = "subpixel-antialiased";
