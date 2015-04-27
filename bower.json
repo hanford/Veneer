@@ -1,0 +1,19 @@
+{
+  "name": "CustomCSS",
+  "version": "0.0.0",
+  "homepage": "https://github.com/hanford/fontsmooth",
+  "authors": [
+    "jack hanford <jackhanford@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "codemirror": "~5.2.0"
+  }
+}

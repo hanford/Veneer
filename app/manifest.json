@@ -1,8 +1,8 @@
 {
-  "name": "Font Smooth",
+  "name": "CustomCSS",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "Smooth fonts like Safari",
+  "description": "Use your own CSS across the web!",
   "icons": {
     "16": "images/icon-16.png",
     "128": "images/icon-128.png"
@@ -15,5 +15,11 @@
       "js": ["scripts/content.js"],
       "run_at": "document_end"
     }],
+    "browser_action": {
+      "default_popup": "index.html"
+    },
+    "permissions": [
+      "storage"
+  ],
   "default_locale": "en"
 }
