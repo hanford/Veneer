@@ -11,8 +11,7 @@ editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
 });
 
 var newCSS = function() {
-  var text = editor.getValue();
-  console.log(text);
+  var text = editor.getValue().replace(/\s+/g, ' ').trim();
   chrome.storage.sync.set({'CustomCSS': text}, function () {
      console.log("Just saved", text)
   });
