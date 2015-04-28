@@ -1,5 +1,6 @@
-var html = document.querySelector('html');
-html.style.webkitFontSmoothing = "antialiased";
+var styleEl = document.createElement('style');
 chrome.storage.sync.get('CustomCSS', function(res) {
-  console.log(res)
+  console.log(styleEl);
+  styleEl.innerText = res['CustomCSS'];
+  document.head.appendChild(styleEl);
 });
