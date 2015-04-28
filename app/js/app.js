@@ -1,13 +1,13 @@
 var completeBtn = document.querySelector('.complete');
 var editor;
 
-chrome.storage.sync.get('CustomCSS', function (res) {
-  console.log(res);
-});
-
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
   lineNumbers: true,
   mode: 'css',
+});
+
+chrome.storage.sync.get('CustomCSS', function (res) {
+  editor.getDoc().setValue(res['CustomCSS']);
 });
 
 var newCSS = function() {
