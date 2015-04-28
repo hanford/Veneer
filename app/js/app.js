@@ -4,8 +4,10 @@ var editor;
 chrome.storage.sync.get('CustomCSS', function (res) {
   console.log(res);
 });
+
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
   lineNumbers: true,
+  mode: 'css',
 });
 
 var newCSS = function() {

@@ -30,7 +30,7 @@ gulp.task('app', function() {
 })
 
 gulp.task('js', function() {
-  return gulp.src('./app/scripts/*.js')
+  return gulp.src('./app/scripts/**.js')
     .pipe($.uglify())
     .pipe(gulp.dest('./dist/scripts/'))
 })
