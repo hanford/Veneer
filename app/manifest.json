@@ -19,7 +19,8 @@
       "default_popup": "index.html"
     },
     "permissions": [
-      "storage"
+      "storage",
+      "tabs"
   ],
   "default_locale": "en"
 }
