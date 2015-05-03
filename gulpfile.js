@@ -11,7 +11,7 @@ gulp.task('index', function() {
 })
 
 gulp.task('scss', function() {
-  return gulp.src('./app/scss/app.scss')
+  return gulp.src('./app/scss/*.scss')
     .pipe($.sass())
     .pipe(gulp.dest('./dist/css/'))
 })
@@ -25,7 +25,7 @@ gulp.task('watch', ['build-ext'], function() {
 
 gulp.task('app', function() {
   return gulp.src('./app/js/*.js')
-    .pipe($.uglify())
+    // .pipe($.uglify())
     .pipe(gulp.dest('./dist/js/'))
 })
 

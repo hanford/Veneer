@@ -1,31 +1,39 @@
 var completeBtn = document.querySelector('.complete');
 var removeBtn = document.querySelector('.remove');
-var editor, currentUrl, storage;
+var editor, currentUrl, storage, port;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
-  theme: 'zenburn',
+  theme: 'dope',
   lineNumbers: true,
   mode: 'css',
   tabSize: 2,
 });
 
-chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
+chrome.tabs.query({active: true},
   function(tabs) {
     currentUrl = tabs[0].url;
   }
 );
 
-chrome.storage.sync.get('CustomCSS', function (res) {
-  if (res['CustomCSS']) {
-    var saved = JSON.parse(res['CustomCSS']);
-    for (var i = 0; saved.length > i; i++) {
-      if (saved[i].url == currentUrl) {
-        console.log(saved[i]);
-        editor.getDoc().setValue(saved[i].CSS);
+function load() {
+  chrome.storage.sync.get('CustomCSS', function (res) {
+    if (res['CustomCSS']) {
+      try {
+        var saved = JSON.parse(res['CustomCSS']);
+        console.log(saved);
+        saved.map(function(item) {
+          if (item.url == currentUrl) {
+            editor.getDoc().setValue(item.CSS);
+          }
+        });
+      } catch(e) {
+        console.log('parse error');
+        removeStorage();
+        load();
       }
     }
-  }
-});
+  });
+}
 
 var removeStorage = function() {
   chrome.storage.sync.remove('CustomCSS', function(res) {
@@ -35,6 +43,7 @@ var removeStorage = function() {
 
 var newCSS = function() {
   chrome.storage.sync.get('CustomCSS', function(res) {
+    var changed = false;
     console.log('Add Called', res)
     if (!res['CustomCSS']) {
       storage = [];
@@ -44,20 +53,34 @@ var newCSS = function() {
 
     console.log(storage);
 
-    var CSSFile = {
-      'url': currentUrl,
-      'CSS': editor.getValue() //.replace(/\s+/g, ' ').trim()
-    }
+    storage.filter(function(item) {
+      return item.url === currentUrl;
+    }).map(function(item) {
+      changed = true;
+      item.CSS = editor.getValue();
+      return item;
+    });
 
-    storage.push(CSSFile);
+    if (!changed) {
+      storage.push({
+        'url': currentUrl,
+        'CSS': editor.getValue(),
+      });
+    }
 
     storage = JSON.stringify(storage);
 
     chrome.storage.sync.set({'CustomCSS': storage}, function (res) {
       console.log("saved", storage);
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, 'reload');
+      });
     });
   });
 };
 
 completeBtn.addEventListener("click", newCSS);
-removeBtn.addEventListener("click", removeStorage)
+removeBtn.addEventListener("click", removeStorage);
+
+load();
+
