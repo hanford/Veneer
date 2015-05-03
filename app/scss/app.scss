@@ -15,7 +15,6 @@ body {
     padding: 10px 15px;
     font-family: 16px;
     width: 49%;
-    /* border: 1px solid #00E676; */
     margin-top: 5px;
     border-radius: 1px;
     display: inline-block;
@@ -28,7 +27,6 @@ body {
 
   .remove {
     background-color: #FF5252;
-    /* border: 1px solid #FF5252; */
     color: white;
     border: none;
     display: inline-block;
@@ -44,4 +42,8 @@ body {
     }
   }
 
+}
+
+textarea {
+  cursor: text;
 }

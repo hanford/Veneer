@@ -3,8 +3,10 @@ var removeBtn = document.querySelector('.remove');
 var editor, currentUrl, storage;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
+  theme: 'zenburn',
   lineNumbers: true,
   mode: 'css',
+  tabSize: 2,
 });
 
 chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
@@ -18,6 +20,7 @@ chrome.storage.sync.get('CustomCSS', function (res) {
     var saved = JSON.parse(res['CustomCSS']);
     for (var i = 0; saved.length > i; i++) {
       if (saved[i].url == currentUrl) {
+        console.log(saved[i]);
         editor.getDoc().setValue(saved[i].CSS);
       }
     }
@@ -43,7 +46,7 @@ var newCSS = function() {
 
     var CSSFile = {
       'url': currentUrl,
-      'CSS': editor.getValue().replace(/\s+/g, ' ').trim()
+      'CSS': editor.getValue() //.replace(/\s+/g, ' ').trim()
     }
 
     storage.push(CSSFile);
