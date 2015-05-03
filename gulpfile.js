@@ -3,7 +3,7 @@ var $ = require('gulp-load-plugins')();
 
 gulp.task('default', ['build-ext'])
 
-gulp.task('build-ext', ['js', 'img', 'manifest', 'en', 'index', 'scss', 'app']);
+gulp.task('build-ext', ['js', 'img', 'manifest', 'en', 'index', 'scss', 'app', 'templates']);
 
 gulp.task('index', function() {
   return gulp.src('./app/index.html')
@@ -36,8 +36,13 @@ gulp.task('js', function() {
 })
 
 gulp.task('img', function() {
-  return gulp.src('./app/images/*.png')
+  return gulp.src('./app/images/**')
     .pipe(gulp.dest('./dist/images/'))
+})
+
+gulp.task('templates', function() {
+  return gulp.src('./app/templates/**.html')
+    .pipe(gulp.dest('./dist/templates/'))
 })
 
 gulp.task('manifest', function() {

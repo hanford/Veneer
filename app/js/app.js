@@ -1,6 +1,8 @@
 var completeBtn = document.querySelector('.complete');
 var removeBtn = document.querySelector('.remove');
-var editor, currentUrl, storage, port;
+var exportBtn = document.querySelector('.export');
+var settingsBtn = document.querySelector('.settings');
+var editor, currentUrl, storage, port, settingsToggle;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
   theme: 'dope',
@@ -11,7 +13,10 @@ editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
 
 chrome.tabs.query({active: true},
   function(tabs) {
-    currentUrl = tabs[0].url;
+    var a = document.createElement('a');
+    a.href = tabs[0].url;
+    currentUrl = a.hostname;
+    document.querySelector('.url-bar').value = currentUrl;
   }
 );
 
@@ -36,9 +41,15 @@ function load() {
 }
 
 var removeStorage = function() {
-  chrome.storage.sync.remove('CustomCSS', function(res) {
-    console.log('done', res);
+  chrome.storage.sync.remove('CustomCSS', function() {
+    console.log('done');
   })
+}
+
+var exportStorage = function() {
+  chrome.tabs.create({url:"../templates/export.html"}, function(tab) {
+    console.log(tab)
+  });
 }
 
 var newCSS = function() {
@@ -79,8 +90,20 @@ var newCSS = function() {
   });
 };
 
+var settings = function() {
+  settingsToggle = !settingsToggle;
+  if (settingsToggle) {
+    document.querySelector('.code-container').style.display = "none";
+    document.querySelector('.settings-container').style.display = "block";
+  } else {
+    document.querySelector('.code-container').style.display = "block";
+    document.querySelector('.settings-container').style.display = "none";
+  }
+}
+
+exportBtn.addEventListener("click", exportStorage);
+settingsBtn.addEventListener("click", settings);
 completeBtn.addEventListener("click", newCSS);
 removeBtn.addEventListener("click", removeStorage);
 
 load();
-

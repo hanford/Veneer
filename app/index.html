@@ -7,12 +7,21 @@
     <script src="bower_components/codemirror/mode/css/css.js"></script>
   </head>
   <body>
-    <!-- <h1>CustomCSS</h1> -->
-    <input type="text" placeholder="url" class="url-bar">
-    <textarea></textarea>
-    <div class="button-container">
-      <button class="complete">Save</button>
-      <button class="remove">Remove</button>
+    <input type="text" placeholder="url" class="url-bar" disabled="disabled">
+    <button class="settings"></button>
+    <div class="code-container">
+      <textarea></textarea>
+      <div class="button-container">
+        <button class="complete">Save</button>
+        <button class="remove">Remove</button>
+      </div>
+    </div>
+    <div class="settings-container">
+      <h3>Settings</h3>
+      <div class="line">
+        <span>Export Data</span>
+        <button class="export">Export</button>
+      </div>
     </div>
     <script src="js/app.js"></script>
   </body>
