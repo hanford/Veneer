@@ -9,7 +9,7 @@ chrome.storage.sync.get('CustomCSS', function(res) {
       var h2 = document.createElement('h2');
       var pre = document.createElement('pre');
       h2.innerText = item.url;
-      pre.innerText = item.CSS;
+      pre.innerText = atob(item.CSS);
       li.appendChild(h2);
       li.appendChild(pre);
       list.appendChild(li);

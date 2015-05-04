@@ -12,6 +12,10 @@ editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
   tabSize: 2,
 });
 
+editor.on("change", function(c) {
+  newCSS();
+})
+
 chrome.tabs.query({active: true},
   function(tabs) {
     var a = document.createElement('a');
@@ -43,7 +47,9 @@ function load() {
 
 var removeStorage = function() {
   chrome.storage.sync.remove('CustomCSS', function() {
-    console.log('done');
+    chrome.storage.sync.getBytesInUse('CustomCSS', function(res) {
+      document.querySelector('.storage').innerText = res + " Bytes"
+    })
   })
 }
 
@@ -75,7 +81,7 @@ var newCSS = function() {
       return item.url === currentUrl;
     }).map(function(item) {
       changed = true;
-      item.CSS = editor.getValue();
+      item.CSS = btoa(editor.getValue());
       return item;
     });
 
