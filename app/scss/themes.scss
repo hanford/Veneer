@@ -1,0 +1,33 @@
+.container {
+  h1 {
+    text-align: center;
+  }
+
+  li {
+    display: inline-block;
+    float: left;
+    list-style: none;
+    margin-right: 20px;
+    border: 1px solid grey;
+    border-radius: 3px;
+
+    img {
+      max-width: 100%;
+      width: 250px;
+    }
+
+    div {
+      border-top: 1px solid grey;
+      padding: 5px;
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    button {
+      display: inline-block;
+      float: right;
+    }
+  }
+}

@@ -25,7 +25,7 @@ gulp.task('watch', ['build-ext'], function() {
 })
 
 gulp.task('app', function() {
-  return gulp.src('./app/js/*.js')
+  return gulp.src('./app/js/**.js')
     // .pipe($.uglify())
     .pipe(gulp.dest('./dist/js/'))
 })

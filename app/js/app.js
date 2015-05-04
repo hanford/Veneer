@@ -3,6 +3,7 @@ var removeBtn = document.querySelector('.remove');
 var exportBtn = document.querySelector('.export');
 var settingsBtn = document.querySelector('.settings');
 var importBtn = document.querySelector('.import');
+var themeBrowse = document.querySelector('.theme-page')
 var editor, currentUrl, storage, port, settingsToggle;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
@@ -59,8 +60,8 @@ var exportStorage = function() {
   });
 }
 
-var importStorage = function() {
-  chrome.tabs.create({url:"../templates/import.html"}, function(tab) {
+var themePage = function() {
+  chrome.tabs.create({url:"../templates/theme.html"}, function(tab) {
     console.log(tab)
   });
 }
@@ -105,6 +106,7 @@ var settings = function() {
   chrome.storage.sync.getBytesInUse('CustomCSS', function(res) {
     document.querySelector('.storage').innerText = res + " Bytes"
   })
+
   if (settingsToggle) {
     document.querySelector('.code-container').style.display = "none";
     document.querySelector('.settings-container').style.display = "block";
@@ -173,6 +175,7 @@ function debounce(func, wait, immediate) {
 // importBtn.addEventListener("click", importStorage);
 document.getElementById('file').addEventListener('change', readFile);
 exportBtn.addEventListener("click", exportStorage);
+themeBrowse.addEventListener("click", themePage);
 settingsBtn.addEventListener("click", settings);
 removeBtn.addEventListener("click", removeStorage);
 
