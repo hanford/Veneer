@@ -20,6 +20,7 @@ gulp.task('watch', ['build-ext'], function() {
   gulp.watch('./app/scripts/**.js', ['js'])
   gulp.watch('./app/js/**.js', ['app'])
   gulp.watch('./app/**.html', ['index'])
+  gulp.watch('./app/templates/**.html', ['templates'])
   gulp.watch('./app/scss/**.scss', ['scss'])
 })
 

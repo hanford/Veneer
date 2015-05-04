@@ -12,15 +12,23 @@
     <div class="code-container">
       <textarea></textarea>
       <div class="button-container">
-        <button class="complete">Save</button>
-        <button class="remove">Remove</button>
+        <button class="complete complete-bttn">Save</button>
+        <button class="remove remove-bttn">Remove</button>
       </div>
     </div>
     <div class="settings-container">
       <h3>Settings</h3>
       <div class="line">
+        <label for="file" class="import">Import Theme</label>
+        <input type="file" class="hidden" id="file">
+      </div>
+      <div class="line">
         <span>Export Data</span>
         <button class="export">Export</button>
+      </div>
+      <div class="line">
+        <span>Remove All Data</span>
+        <button class="remove">Remove</button>
       </div>
     </div>
     <script src="js/app.js"></script>

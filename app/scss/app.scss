@@ -8,7 +8,7 @@ body {
     display: block;
   }
 
-  .complete {
+  .complete-bttn {
     background-color: #00E676;
     border: none;
     color: white;
@@ -25,7 +25,7 @@ body {
     }
   }
 
-  .remove {
+  .remove-bttn {
     background-color: #FF5252;
     color: white;
     border: none;
@@ -43,17 +43,34 @@ body {
   }
 
   .line {
+    font-size: 13px;
+    display: block;
+    clear: both;
+    margin: 10px 0;
+    padding: 10px 0;
+
     span {
       float: left;
       display: inline-block;
     }
 
+    .import {
+      text-transform: uppercase;
+      background-color: transparent;
+      border: 0px;
+      color: #2196F3;
+      display: inline-block;
+      &:hover {
+        cursor: pointer;
+        opacity: 1;
+      }
+    }
+
     button {
       text-transform: uppercase;
       background-color: transparent;
-      color: #2196F3;
       border: 0px;
-      font-family: 16px;
+      color: #2196F3;
       float: right;
       display: inline-block;
       &:hover {
@@ -91,7 +108,7 @@ body {
   left: 3px;
 
   &:hover {
-    cursor: pointer;
+    cursor: pointer !important;
     border: 1px solid grey;
     border-radius: 3px;
   }
@@ -114,4 +131,8 @@ textarea {
 
 .cm-s-dope.CodeMirror {
   max-width: 350px;
+}
+
+.hidden {
+  display: none;
 }

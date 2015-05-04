@@ -2,6 +2,7 @@ var completeBtn = document.querySelector('.complete');
 var removeBtn = document.querySelector('.remove');
 var exportBtn = document.querySelector('.export');
 var settingsBtn = document.querySelector('.settings');
+var importBtn = document.querySelector('.import');
 var editor, currentUrl, storage, port, settingsToggle;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
@@ -52,6 +53,12 @@ var exportStorage = function() {
   });
 }
 
+var importStorage = function() {
+  chrome.tabs.create({url:"../templates/import.html"}, function(tab) {
+    console.log(tab)
+  });
+}
+
 var newCSS = function() {
   chrome.storage.sync.get('CustomCSS', function(res) {
     var changed = false;
@@ -81,12 +88,7 @@ var newCSS = function() {
 
     storage = JSON.stringify(storage);
 
-    chrome.storage.sync.set({'CustomCSS': storage}, function (res) {
-      console.log("saved", storage);
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, 'reload');
-      });
-    });
+    saveToStorage(storage);
   });
 };
 
@@ -101,6 +103,50 @@ var settings = function() {
   }
 }
 
+function addTheme(contents) {
+  chrome.storage.sync.get('CustomCSS', function(res) {
+    var changed = false;
+    console.log('Add Called', res)
+    if (!res['CustomCSS']) {
+      storage = [];
+    } else {
+      storage = JSON.parse(res['CustomCSS']);
+    }
+    storage.push(contents);
+
+    storage = JSON.stringify(storage);
+
+    saveToStorage(storage);
+  })
+}
+
+function saveToStorage(strg) {
+  chrome.storage.sync.set({'CustomCSS': strg}, function (res) {
+    console.log("saved", strg);
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, 'reload');
+    });
+  });
+}
+
+function readFile(evt) {
+   var f = evt.target.files[0];
+   if (f) {
+     var r = new FileReader();
+     r.onload = function(e) {
+       var contents = e.target.result;
+       console.log(contents)
+       contents = JSON.parse(contents);
+       addTheme(contents);
+     }
+     r.readAsText(f);
+   }
+ }
+
+
+
+// importBtn.addEventListener("click", importStorage);
+document.getElementById('file').addEventListener('change', readFile);
 exportBtn.addEventListener("click", exportStorage);
 settingsBtn.addEventListener("click", settings);
 completeBtn.addEventListener("click", newCSS);
