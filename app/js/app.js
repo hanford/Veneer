@@ -95,6 +95,9 @@ var newCSS = function() {
 
 var settings = function() {
   settingsToggle = !settingsToggle;
+  chrome.storage.sync.getBytesInUse('CustomCSS', function(res) {
+    document.querySelector('.storage').innerText = res + " Bytes"
+  })
   if (settingsToggle) {
     document.querySelector('.code-container').style.display = "none";
     document.querySelector('.settings-container').style.display = "block";
@@ -131,19 +134,18 @@ function saveToStorage(strg) {
 }
 
 function readFile(evt) {
-   var f = evt.target.files[0];
-   if (f) {
-     var r = new FileReader();
-     r.onload = function(e) {
-       var contents = e.target.result;
-       console.log(contents)
-       contents = JSON.parse(contents);
-       addTheme(contents);
-     }
-     r.readAsText(f);
+  var f = evt.target.files[0];
+  if (f) {
+   var r = new FileReader();
+   r.onload = function(e) {
+     var contents = e.target.result;
+     console.log(contents)
+     contents = JSON.parse(contents);
+     addTheme(contents);
    }
- }
-
+   r.readAsText(f);
+  }
+}
 
 
 // importBtn.addEventListener("click", importStorage);
