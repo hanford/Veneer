@@ -29,7 +29,7 @@ function load() {
         console.log(saved);
         saved.map(function(item) {
           if (item.url == currentUrl) {
-            editor.getDoc().setValue(item.CSS);
+            editor.getDoc().setValue(atob(item.CSS));
           }
         });
       } catch(e) {
@@ -79,10 +79,11 @@ var newCSS = function() {
       return item;
     });
 
+    var b64 = btoa(editor.getValue());
     if (!changed) {
       storage.push({
         'url': currentUrl,
-        'CSS': editor.getValue(),
+        'CSS': b64,
       });
     }
 

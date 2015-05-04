@@ -10,7 +10,8 @@ function loadCustom() {
       var saved = JSON.parse(res['CustomCSS']);
       style.innerText = saved.reduce(function(prev, item) {
         if (item.url == url) {
-          return prev + item.CSS;
+          var code = atob(item.CSS);
+          return prev + code;
         } else {
           return prev;
         }
