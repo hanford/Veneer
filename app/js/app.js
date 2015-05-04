@@ -158,7 +158,6 @@ function readFile(evt) {
 document.getElementById('file').addEventListener('change', readFile);
 exportBtn.addEventListener("click", exportStorage);
 settingsBtn.addEventListener("click", settings);
-completeBtn.addEventListener("click", newCSS);
 removeBtn.addEventListener("click", removeStorage);
 
 load();
