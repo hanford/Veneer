@@ -1,62 +1,45 @@
 var themes;
-var access_token = '?access_token=46ff7cc2b79637182d90c1d26bbfc60f16997484';
 
-var githubThemes = function() {
-  fetch('https://api.github.com/repos/hanford/website-themes/contents' + access_token)
-  .then(function(response) {
-    return response.json()
-  }).then(function(json) {
-    console.log('theme response', json)
-    themes = json;
-    domThemes();
-  }).catch(function(ex) {
-    console.log('parsing failed', ex)
+function getThemes() {
+  chrome.storage.sync.get('VaneerThemes', function(res) {
+    // var themes = ;
+    themes = JSON.parse(res['VaneerThemes']);
+    domThemes()
   })
 }
 
 var domThemes = function() {
   var list = document.querySelector('.list');
   themes.map(function(item) {
-    fetch('https://api.github.com/repos/hanford/website-themes/contents/' + item.path  + access_token)
-    .then(function(response) {
-      return response.json()
-    }).then(function(json) {
-      var liItem = document.createElement('li');
-      var photo = document.createElement('img');
-      var div = document.createElement('div');
-      var title = document.createElement('span');
-      var button = document.createElement('button');
+
+      var liItem = document.createElement('li'),
+          div = document.createElement('div'),
+          title = document.createElement('span'),
+          button = document.createElement('button');
+
       button.innerText = 'Download Theme';
       // Setting attribute for later use
-      button.setAttribute("data", json[1].path)
+      button.setAttribute("data", item.url)
       button.addEventListener("click", downloadTheme);
-      photo.src = json[0].download_url;
-      title.innerText = item.name;
+      // photo.src = json[0].download_url;
+      title.innerText = item.url;
       div.appendChild(title);
       div.appendChild(button);
-      liItem.appendChild(photo);
       liItem.appendChild(div);
       list.appendChild(liItem);
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
-    // var btn = document.querySelectorAll('button');
-    // console.log(btn)
   })
 }
 
 var downloadTheme = function(event) {
-  console.log(event.srcElement.attributes["data"].nodeValue);
-  fetch('https://raw.githubusercontent.com/hanford/website-themes/master/' + event.srcElement.attributes["data"].nodeValue + access_token)
-  .then(function(response) {
-    return response.json()
-  }).then(function(json) {
-    addTheme(json);
-  }).catch(function(ex) {
-    console.log('parsing failed', ex)
+  console.log(themes)
+  themes.map(function(i) {
+    if (i.url == event.srcElement.attributes["data"].nodeValue) {
+      addTheme(i)
+    }
   })
+  // themes.map(function(userMe))
+  // addTheme(json);
 }
-
 
 function addTheme(contents) {
   chrome.storage.sync.get('CustomCSS', function(res) {
@@ -67,6 +50,7 @@ function addTheme(contents) {
     } else {
       storage = JSON.parse(res['CustomCSS']);
     }
+
     storage.push(contents);
 
     storage = JSON.stringify(storage);
@@ -84,4 +68,4 @@ function saveToStorage(strg) {
   });
 }
 
-githubThemes();
+getThemes();

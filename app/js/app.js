@@ -126,9 +126,7 @@ function addTheme(contents) {
       storage = JSON.parse(res['CustomCSS']);
     }
     storage.push(contents);
-
     storage = JSON.stringify(storage);
-
     saveToStorage(storage);
   })
 }
