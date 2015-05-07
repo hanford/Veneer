@@ -2,7 +2,6 @@ var themes;
 
 function getThemes() {
   chrome.storage.sync.get('VaneerThemes', function(res) {
-    // var themes = ;
     themes = JSON.parse(res['VaneerThemes']);
     domThemes()
   })
@@ -12,21 +11,25 @@ var domThemes = function() {
   var list = document.querySelector('.list');
   themes.map(function(item) {
 
-      var liItem = document.createElement('li'),
-          div = document.createElement('div'),
-          title = document.createElement('span'),
-          button = document.createElement('button');
+    var liItem = document.createElement('li'),
+        div = document.createElement('div'),
+        title = document.createElement('span'),
+        iframe = document.createElement('iframe'),
+        button = document.createElement('button');
 
-      button.innerText = 'Download Theme';
-      // Setting attribute for later use
-      button.setAttribute("data", item.url)
-      button.addEventListener("click", downloadTheme);
-      // photo.src = json[0].download_url;
-      title.innerText = item.url;
-      div.appendChild(title);
-      div.appendChild(button);
-      liItem.appendChild(div);
-      list.appendChild(liItem);
+    button.innerText = 'Use Theme';
+    // Setting attribute for later use
+    button.setAttribute("data", item.url)
+    button.addEventListener("click", downloadTheme);
+    // photo.src = json[0].download_url;
+    iframe.src = 'http://' + item.url;
+    title.innerText = item.url;
+    div.appendChild(title);
+    div.appendChild(button);
+    liItem.appendChild(iframe);
+    liItem.appendChild(div);
+    list.appendChild(liItem);
+
   })
 }
 
@@ -37,14 +40,11 @@ var downloadTheme = function(event) {
       addTheme(i)
     }
   })
-  // themes.map(function(userMe))
-  // addTheme(json);
 }
 
 function addTheme(contents) {
   chrome.storage.sync.get('CustomCSS', function(res) {
-    var changed = false;
-    console.log('Add Called', res)
+    console.log('Add', res)
     if (!res['CustomCSS']) {
       storage = [];
     } else {

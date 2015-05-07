@@ -23,7 +23,9 @@
     },
     "permissions": [
       "storage",
-      "tabs"
+      "tabs",
+      "webRequest",
+      "webRequestBlocking"
   ],
   "default_locale": "en"
 }
