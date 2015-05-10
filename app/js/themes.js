@@ -33,10 +33,9 @@ var domThemes = function() {
 }
 
 var downloadTheme = function(event) {
-  console.log(themes)
   themes.map(function(i) {
     if (i.url == event.srcElement.attributes["data"].nodeValue) {
-      addTheme(i)
+      addTheme(i);
     }
   })
 }
@@ -61,9 +60,7 @@ function addTheme(contents) {
 function saveToStorage(strg) {
   chrome.storage.sync.set({'CustomCSS': strg}, function (res) {
     console.log("saved", strg);
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, 'reload');
-    });
+    location.reload();
   });
 }
 

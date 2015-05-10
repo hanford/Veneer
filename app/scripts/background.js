@@ -1,10 +1,13 @@
 var themes,
     access_token = '?access_token=46ff7cc2b79637182d90c1d26bbfc60f16997484',
-    path = [],
+    path,
     downloadLinks = [],
-    themeList = [];
+    themeList;
 
 var DownloadThemes = function() {
+  themeList = [];
+  path = [];
+  console.log('called');
   fetch('https://api.github.com/repos/hanford/website-themes/contents' + access_token)
   .then(function(response) {
     return response.json()
@@ -34,6 +37,13 @@ function downloadFull(path) {
     })
   })
 }
+
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse){
+    console.log(request.msg);
+    if (request.msg == "updateThemes") DownloadThemes();
+  }
+);
 
 function saveTheme(theme) {
   themeList.push(theme);

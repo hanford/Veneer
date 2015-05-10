@@ -24,7 +24,7 @@ chrome.storage.sync.get('CustomCSS', function(res) {
       list.appendChild(li);
     })
   } else {
-    alert('You don\'t currently have any themes!');
+    list.innerText = 'No custom themes!';
   }
 });
 

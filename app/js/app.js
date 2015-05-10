@@ -2,7 +2,8 @@ var completeBtn = document.querySelector('.complete');
 var removeBtn = document.querySelector('.remove');
 var settingsBtn = document.querySelector('.settings');
 var importBtn = document.querySelector('.import');
-var themeBrowse = document.querySelector('.theme-page')
+var themeBrowse = document.querySelector('.theme-page');
+var update = document.querySelector('.update');
 var editor, currentUrl, storage, port, settingsToggle;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
@@ -162,11 +163,20 @@ function debounce(func, wait, immediate) {
 	};
 };
 
+function callupdate() {
+  debounce(updateThemes(), 5000);
+}
+
+function updateThemes() {
+  chrome.extension.sendRequest({msg: 'updateThemes'});
+}
+
 
 // importBtn.addEventListener("click", importStorage);
 document.getElementById('file').addEventListener('change', readFile);
 themeBrowse.addEventListener("click", themePage);
 settingsBtn.addEventListener("click", settings);
+update.addEventListener("click", callupdate);
 removeBtn.addEventListener("click", removeStorage);
 
 load();
