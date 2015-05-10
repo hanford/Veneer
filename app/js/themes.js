@@ -21,7 +21,6 @@ var domThemes = function() {
     // Setting attribute for later use
     button.setAttribute("data", item.url)
     button.addEventListener("click", downloadTheme);
-    // photo.src = json[0].download_url;
     iframe.src = 'http://' + item.url;
     title.innerText = item.url;
     div.appendChild(title);
