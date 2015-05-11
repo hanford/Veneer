@@ -1,7 +1,7 @@
 var completeBtn = document.querySelector('.complete');
 var removeBtn = document.querySelector('.remove');
 var settingsBtn = document.querySelector('.settings');
-var importBtn = document.querySelector('.import');
+
 var themeBrowse = document.querySelector('.theme-page');
 var update = document.querySelector('.update');
 var editor, currentUrl, storage, port, settingsToggle;
@@ -134,20 +134,6 @@ function saveToStorage(strg) {
   });
 }
 
-function readFile(evt) {
-  var f = evt.target.files[0];
-  if (f) {
-   var r = new FileReader();
-   r.onload = function(e) {
-     var contents = e.target.result;
-     console.log(contents)
-     contents = JSON.parse(contents);
-     addTheme(contents);
-   }
-   r.readAsText(f);
-  }
-}
-
 function debounce(func, wait, immediate) {
 	var timeout;
 	return function() {
@@ -164,7 +150,7 @@ function debounce(func, wait, immediate) {
 };
 
 function callupdate() {
-  debounce(updateThemes(), 5000);
+  debounce(updateThemes(), 500);
 }
 
 function updateThemes() {
@@ -173,7 +159,7 @@ function updateThemes() {
 
 
 // importBtn.addEventListener("click", importStorage);
-document.getElementById('file').addEventListener('change', readFile);
+
 themeBrowse.addEventListener("click", themePage);
 settingsBtn.addEventListener("click", settings);
 update.addEventListener("click", callupdate);

@@ -5,7 +5,6 @@ var themes,
     themeList;
 
 var DownloadThemes = function() {
-  themeList = [];
   path = [];
   console.log('called');
   fetch('https://api.github.com/repos/hanford/website-themes/contents' + access_token)
@@ -24,6 +23,7 @@ var DownloadThemes = function() {
 
 // Downloads full theme
 function downloadFull(path) {
+  themeList = [];
   path.map(function(instance) {
     fetch('https://api.github.com/repos/hanford/website-themes/contents/' + instance + '/theme.json' + access_token)
     .then(function(response) {
@@ -32,8 +32,9 @@ function downloadFull(path) {
       fetch(res.download_url + access_token).then(function(response) {
         return response.json()
       }).then(function(res) {
-        saveTheme(res)
+        themeList.push(res);
       })
+      saveTheme(themeList);
     })
   })
 }
@@ -46,7 +47,7 @@ chrome.extension.onRequest.addListener(
 );
 
 function saveTheme(theme) {
-  themeList.push(theme);
+  console.log("saving", JSON.stringify(theme));
   chrome.storage.sync.set({'VaneerThemes': JSON.stringify(themeList)})
 }
 

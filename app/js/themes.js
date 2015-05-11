@@ -1,4 +1,5 @@
 var themes;
+var importBtn = document.querySelector('.import');
 
 function getThemes() {
   chrome.storage.sync.get('VaneerThemes', function(res) {
@@ -65,3 +66,19 @@ function saveToStorage(strg) {
 }
 
 getThemes();
+
+function readFile(evt) {
+  var f = evt.target.files[0];
+  if (f) {
+   var r = new FileReader();
+   r.onload = function(e) {
+     var contents = e.target.result;
+     console.log(contents)
+     contents = JSON.parse(contents);
+     addTheme(contents);
+   }
+   r.readAsText(f);
+  }
+}
+
+document.getElementById('file').addEventListener('change', readFile);
