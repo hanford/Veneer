@@ -16,7 +16,6 @@ editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
 editor.on("change", function(c) {
   debounce(newCSS(), 1000);
 })
-
 chrome.tabs.query({active: true},
   function(tabs) {
     var a = document.createElement('a');
