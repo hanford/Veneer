@@ -3,7 +3,6 @@ var removeBtn = document.querySelector('.remove');
 var settingsBtn = document.querySelector('.settings');
 
 var themeBrowse = document.querySelector('.theme-page');
-// var update = document.querySelector('.update');
 var editor, currentUrl, storage, port, settingsToggle;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
@@ -16,6 +15,7 @@ editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
 editor.on("change", function(c) {
   debounce(newCSS(), 1000);
 })
+
 chrome.tabs.query({active: true},
   function(tabs) {
     var a = document.createElement('a');
@@ -60,20 +60,19 @@ var themePage = function() {
 }
 
 var newCSS = function() {
-  console.log('here');
-  chrome.storage.sync.get('CustomCSS', function(res) {
+  chrome.storage.sync.get('WebsiteList', function(res) {
+    console.log(res['WebsiteList'])
     var changed = false;
-    console.log('Add Called', res)
-    if (!res['CustomCSS']) {
+
+    if (!res['WebsiteList']) {
       storage = [];
     } else {
-      storage = JSON.parse(res['CustomCSS']);
+      storage = JSON.parse(res['WebsiteList']);
     }
 
-    console.log(storage);
-
     storage.filter(function(item) {
-      return item.url === currentUrl;
+      console.log("filter", item)
+      return item === currentUrl;
     }).map(function(item) {
       changed = true;
       item.CSS = btoa(editor.getValue());
@@ -82,15 +81,14 @@ var newCSS = function() {
 
     var b64 = btoa(editor.getValue());
     if (!changed) {
-      storage.push({
-        'url': currentUrl,
-        'CSS': b64,
-      });
+      storage.push(currentUrl);
     }
 
     storage = JSON.stringify(storage);
 
-    saveToStorage(storage);
+    console.log("storage", storage);
+
+    saveToList(storage);
   });
 };
 
@@ -124,9 +122,10 @@ function addTheme(contents) {
   })
 }
 
-function saveToStorage(strg) {
-  chrome.storage.sync.set({'CustomCSS': strg}, function (res) {
-    console.log("saved", strg);
+function saveToList(strg) {
+  console.log("presave", strg);
+  chrome.storage.sync.set({'WebsiteList': strg}, function (res) {
+    console.log("postsave", strg);
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, 'reload');
     });
@@ -161,7 +160,6 @@ function debounce(func, wait, immediate) {
 
 themeBrowse.addEventListener("click", themePage);
 settingsBtn.addEventListener("click", settings);
-// update.addEventListener("click", callupdate);
 removeBtn.addEventListener("click", removeStorage);
 
 load();
