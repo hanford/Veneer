@@ -3,6 +3,7 @@ var removeBtn = document.querySelector('.remove');
 var settingsBtn = document.querySelector('.settings');
 
 var themeBrowse = document.querySelector('.theme-page');
+// var update = document.querySelector('.update');
 var editor, currentUrl, storage, port, settingsToggle;
 
 editor = CodeMirror.fromTextArea(document.querySelector('textarea'), {
@@ -60,19 +61,20 @@ var themePage = function() {
 }
 
 var newCSS = function() {
-  chrome.storage.sync.get('WebsiteList', function(res) {
-    console.log(res['WebsiteList'])
+  console.log('here');
+  chrome.storage.sync.get('CustomCSS', function(res) {
     var changed = false;
-
-    if (!res['WebsiteList']) {
+    console.log('Add Called', res)
+    if (!res['CustomCSS']) {
       storage = [];
     } else {
-      storage = JSON.parse(res['WebsiteList']);
+      storage = JSON.parse(res['CustomCSS']);
     }
 
+    console.log(storage);
+
     storage.filter(function(item) {
-      console.log("filter", item)
-      return item === currentUrl;
+      return item.url === currentUrl;
     }).map(function(item) {
       changed = true;
       item.CSS = btoa(editor.getValue());
@@ -81,14 +83,15 @@ var newCSS = function() {
 
     var b64 = btoa(editor.getValue());
     if (!changed) {
-      storage.push(currentUrl);
+      storage.push({
+        'url': currentUrl,
+        'CSS': b64,
+      });
     }
 
     storage = JSON.stringify(storage);
 
-    console.log("storage", storage);
-
-    saveToList(storage);
+    saveToStorage(storage);
   });
 };
 
@@ -122,10 +125,9 @@ function addTheme(contents) {
   })
 }
 
-function saveToList(strg) {
-  console.log("presave", strg);
-  chrome.storage.sync.set({'WebsiteList': strg}, function (res) {
-    console.log("postsave", strg);
+function saveToStorage(strg) {
+  chrome.storage.sync.set({'CustomCSS': strg}, function (res) {
+    console.log("saved", strg);
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, 'reload');
     });
@@ -133,18 +135,18 @@ function saveToList(strg) {
 }
 
 function debounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
 };
 
 // function callupdate() {
@@ -160,6 +162,7 @@ function debounce(func, wait, immediate) {
 
 themeBrowse.addEventListener("click", themePage);
 settingsBtn.addEventListener("click", settings);
+// update.addEventListener("click", callupdate);
 removeBtn.addEventListener("click", removeStorage);
 
 load();
