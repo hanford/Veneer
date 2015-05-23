@@ -24,6 +24,20 @@ gulp.task('watch', ['build-ext'], function() {
   gulp.watch('./app/scss/**.scss', ['scss'])
 })
 
+gulp.task('bump', function(){
+  gulp.src('./app/manifest.json')
+  .pipe($.bump({type: 'patch'}))
+  .pipe(gulp.dest('./dist/'))
+})
+
+gulp.task('zip', function() {
+  return gulp.src('./dist/**/**.*')
+    .pipe($.zip('Veneer.zip'))
+    .pipe(gulp.dest('./'));
+})
+
+gulp.task('release', ['build-ext', 'bump', 'zip'])
+
 gulp.task('app', function() {
   return gulp.src('./app/js/**.js')
     // .pipe($.uglify())

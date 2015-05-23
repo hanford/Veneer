@@ -15,5 +15,9 @@
     "gulp-uglify": "^1.1.0",
     "gulp-watch": "^4.2.4",
     "node-sass": "^3.1.1"
+  },
+  "dependencies": {
+    "gulp-bump": "^0.3.1",
+    "gulp-zip": "^3.0.2"
   }
 }
