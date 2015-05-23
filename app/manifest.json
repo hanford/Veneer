@@ -24,6 +24,7 @@
     },
     "permissions": [
       "storage",
+      "unlimitedStorage",
       "tabs",
       "webRequest",
       "webRequestBlocking"
