@@ -1,7 +1,6 @@
 # Building Veneer
 clone the repo  
 npm install  
-bower install  
 gulp build-ext  
 
 ### Todo's

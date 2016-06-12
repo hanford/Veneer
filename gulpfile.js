@@ -3,7 +3,7 @@ var $ = require('gulp-load-plugins')();
 
 gulp.task('default', ['build-ext'])
 
-gulp.task('build-ext', ['js', 'img', 'manifest', 'en', 'index', 'scss', 'app', 'templates']);
+gulp.task('build-ext', ['img', 'manifest', 'en', 'index', 'css']);
 
 gulp.task('index', function() {
   return gulp.src('./app/index.html')
@@ -16,12 +16,17 @@ gulp.task('scss', function() {
     .pipe(gulp.dest('./dist/css/'))
 })
 
+gulp.task('css', function() {
+  return gulp.src(['./app/scss/*.css', 'node_modules/codemirror/lib/codemirror.css'])
+    .pipe(gulp.dest('./dist/css/'))
+})
+
 gulp.task('watch', ['build-ext'], function() {
-  gulp.watch('./app/scripts/**.js', ['js'])
-  gulp.watch('./app/js/**.js', ['app'])
+  // gulp.watch('./app/scripts/**.js', ['js'])
+  // gulp.watch('./app/js/**.js', ['app'])
   gulp.watch('./app/**.html', ['index'])
-  gulp.watch('./app/templates/**.html', ['templates'])
-  gulp.watch('./app/scss/**.scss', ['scss'])
+  // gulp.watch('./app/templates/**.html', ['templates'])
+  gulp.watch('./app/scss/**.css', ['css'])
 })
 
 gulp.task('bump', function(){
@@ -37,18 +42,6 @@ gulp.task('zip', function() {
 })
 
 gulp.task('release', ['build-ext', 'bump', 'zip'])
-
-gulp.task('app', function() {
-  return gulp.src('./app/js/**.js')
-    // .pipe($.uglify())
-    .pipe(gulp.dest('./dist/js/'))
-})
-
-gulp.task('js', function() {
-  return gulp.src('./app/scripts/**.js')
-    // .pipe($.uglify())
-    .pipe(gulp.dest('./dist/scripts/'))
-})
 
 gulp.task('img', function() {
   return gulp.src('./app/images/**')
