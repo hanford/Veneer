@@ -1,43 +1,28 @@
-var style = document.createElement('style');
-var url = window.location.hostname;
-var _port;
+var style = document.createElement('style')
+var url = window.location.origin
 
-style.id = 'custom-css-style';
+style.id = 'custom-css-style'
 
 function loadCustom() {
-  chrome.storage.sync.get('CustomCSS', function(res) {
+  chrome.storage.sync.get('CustomCSS', function (res) {
     if (res['CustomCSS']) {
-      var saved = JSON.parse(res['CustomCSS']);
-      style.innerText = saved.reduce(function(prev, item) {
-        if (item.url == url) {
-          console.log(item.CSS);
-          var code = atob(item.CSS);
-          return prev + code;
+      var saved = JSON.parse(res['CustomCSS'])
+      console.log(saved)
+      style.innerText = saved.reduce(function (prev, item) {
+        if (item.url === url) {
+          console.log(item.CSS)
+          var code = atob(item.CSS)
+          return prev + code
         } else {
-          return prev;
+          return prev
         }
-      }, "");
+      }, '')
     }
-  });
+  })
 }
 
-loadCustom();
-document.head.appendChild(style);
+loadCustom()
 
-chrome.runtime.onMessage.addListener(function(msg) {
-  if (msg === 'reload') {
-    loadCustom();
-  }
-});
+document.head.appendChild(style)
 
-// chrome.runtime.onConnect.addListener(function(port) {
-//   console.log('Port connected');
-//   _port = port;
-//
-//   port.onMessage.addListener(function(msg) {
-//     console.log(msg);
-//     if (msg === 'reload') {
-//       loadCustom();
-//     }
-//   });
-// });
+chrome.runtime.onMessage.addListener(msg => msg === 'reload' && loadCustom())

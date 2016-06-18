@@ -1,7 +1,8 @@
 'use strict'
 
-const CodeMirror = require('codemirror')
 require('codemirror/mode/css/css')
+
+const CodeMirror = require('codemirror')
 const codeMirrorConfig = {
   theme: 'dope',
   lineNumbers: true,
@@ -19,35 +20,32 @@ class Veneer {
     const settingsBtn = document.querySelector('.settings')
     const urlBar = document.querySelector('.url-bar')
     var settingsToggle
-    this.currentUrl
 
-    chrome.tabs.query({active: true}, tabs => {
-        var a = document.createElement('a')
-        a.href = tabs[0].url
-        this.currentUrl = a.hostname
-        urlBar.value = this.currentUrl
-      }
-    )
+    this.load = this.load.bind(this)
+    this.removeStorage = this.removeStorage.bind(this)
+    this.saveToStorage = this.saveToStorage.bind(this)
+    this.newCSS = this.newCSS.bind(this)
 
-    editor.on('change', this.newCSS)
-    settingsBtn.addEventListener('click', this.settings)
-    removeBtn.addEventListener('click', this.removeStorage)
+    chrome.tabs.query({ active: true }, (tabs) => {
+      this.currentUrl = urlBar.value = tabs[0].url
 
-    this.load()
+      editor.on('change', this.newCSS)
+      settingsBtn.addEventListener('click', this.settings)
+      removeBtn.addEventListener('click', this.removeStorage)
+    })
   }
 
   load () {
-    console.log('HERE!')
     chrome.storage.sync.get('CustomCSS', (res) => {
       if (res['CustomCSS']) {
         try {
-          var saved = JSON.parse(res['CustomCSS'])
-          saved.map((item) => {
-            if (item.url == this.currentUrl) {
-              editor.getDoc().setValue(atob(item.CSS));
-            }
-          })
-        } catch(e) {
+          JSON.parse(res['CustomCSS'])
+            .map((item) => {
+              if (item.url === this.currentUrl) {
+                editor.getDoc().setValue(atob(item.CSS))
+              }
+            })
+        } catch (e) {
           this.removeStorage()
         }
       }
@@ -55,23 +53,23 @@ class Veneer {
   }
 
   removeStorage () {
-    chrome.storage.sync.remove('CustomCSS', function() {
-      chrome.storage.sync.getBytesInUse('CustomCSS', function (res) {
+    chrome.storage.sync.remove('CustomCSS', () => {
+      chrome.storage.sync.getBytesInUse('CustomCSS', (res) => {
         document.querySelector('.storage').innerText = res + " Bytes"
       })
     })
   }
 
-  saveToStorage (strg) {
-    chrome.storage.sync.set({'CustomCSS': strg}, function (res) {
-      chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, 'reload')
+  saveToStorage (storage) {
+    chrome.storage.sync.set({'CustomCSS': storage}, (res) => {
+      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        return chrome.tabs.sendMessage(tabs[0].id, 'reload')
       })
     })
   }
 
   newCSS (c) {
-    return chrome.storage.sync.get('CustomCSS', (res) => {
+    chrome.storage.sync.get('CustomCSS', (res) => {
       let changed = false
       let storage
 
@@ -91,24 +89,23 @@ class Veneer {
           })
       }
 
-      let b64 = btoa(editor.getValue())
-
       if (!changed) {
+        var b64 = btoa(editor.getValue())
+
         storage.push({
           'url': this.currentUrl,
           'CSS': b64,
         })
       }
 
-      storage = JSON.stringify(storage)
-
-      return this.saveToStorage(storage)
+      return this.saveToStorage(JSON.stringify(storage))
     })
   }
 
   settings () {
-    this.settingsToggle = !this.settingsToggle;
-    chrome.storage.sync.getBytesInUse('CustomCSS', function (res) {
+    this.settingsToggle = !this.settingsToggle
+
+    chrome.storage.sync.getBytesInUse('CustomCSS', (res) => {
       document.querySelector('.storage').innerText = res + " / 8,192";
     })
 
@@ -122,4 +119,6 @@ class Veneer {
   }
 }
 
-new Veneer()
+var veneer = new Veneer()
+
+return veneer.load()
