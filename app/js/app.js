@@ -19,7 +19,6 @@ class Veneer {
     const removeBtn = document.querySelector('.remove')
     const settingsBtn = document.querySelector('.settings')
     const urlBar = document.querySelector('.url-bar')
-    var settingsToggle
 
     this.load = this.load.bind(this)
     this.removeStorage = this.removeStorage.bind(this)
@@ -27,7 +26,9 @@ class Veneer {
     this.newCSS = this.newCSS.bind(this)
 
     chrome.tabs.query({ active: true }, (tabs) => {
-      this.currentUrl = urlBar.value = tabs[0].url
+      let a = document.createElement('a')
+      a.href = tabs[0].url
+      this.currentUrl = urlBar.value = a.host
 
       editor.on('change', this.newCSS)
       settingsBtn.addEventListener('click', this.settings)

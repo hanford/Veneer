@@ -1,5 +1,5 @@
 var style = document.createElement('style')
-var url = window.location.origin
+var url = window.location.host
 
 style.id = 'custom-css-style'
 
