@@ -3,30 +3,30 @@ var $ = require('gulp-load-plugins')();
 
 gulp.task('default', ['build-ext'])
 
-gulp.task('build-ext', ['img', 'manifest', 'en', 'index', 'css']);
+gulp.task('build-ext', ['img', 'manifest', 'en', 'index', 'css', 'move-themes']);
 
 gulp.task('index', function() {
   return gulp.src('./app/index.html')
     .pipe(gulp.dest('./dist/'))
 })
 
-gulp.task('scss', function() {
-  return gulp.src('./app/scss/*.scss')
-    .pipe($.sass())
+gulp.task('css', function() {
+  return gulp.src(['./app/css/*.css', 'node_modules/codemirror/lib/codemirror.css'])
     .pipe(gulp.dest('./dist/css/'))
 })
 
-gulp.task('css', function() {
-  return gulp.src(['./app/scss/*.css', 'node_modules/codemirror/lib/codemirror.css'])
+gulp.task('move-themes', function() {
+  gulp.src(['./app/js/themes.js'])
+    .pipe(gulp.dest('./dist/js/'))
+
+  return gulp.src(['./app/css/themes.css'])
     .pipe(gulp.dest('./dist/css/'))
 })
 
 gulp.task('watch', ['build-ext'], function() {
-  // gulp.watch('./app/scripts/**.js', ['js'])
-  // gulp.watch('./app/js/**.js', ['app'])
   gulp.watch('./app/**.html', ['index'])
-  // gulp.watch('./app/templates/**.html', ['templates'])
-  gulp.watch('./app/scss/**.css', ['css'])
+  gulp.watch(['./app/templates/**.html', './app/js/themes.js'], ['move-themes'])
+  gulp.watch('./app/css/**.css', ['css'])
 })
 
 gulp.task('bump', function(){

@@ -3,15 +3,15 @@
 require('codemirror/mode/css/css')
 
 const CodeMirror = require('codemirror')
-const codeMirrorConfig = {
+const url = require('url')
+
+const textArea = document.querySelector('textarea')
+const editor = CodeMirror.fromTextArea(textArea, {
   theme: 'dope',
   lineNumbers: true,
   mode: 'css',
   tabSize: 2
-}
-
-const textArea = document.querySelector('textarea')
-const editor = CodeMirror.fromTextArea(textArea, codeMirrorConfig)
+})
 
 class Veneer {
   constructor () {
@@ -19,6 +19,7 @@ class Veneer {
     const removeBtn = document.querySelector('.remove')
     const settingsBtn = document.querySelector('.settings')
     const urlBar = document.querySelector('.url-bar')
+    const themeBtn = document.querySelector('.theme-btn')
 
     this.load = this.load.bind(this)
     this.removeStorage = this.removeStorage.bind(this)
@@ -26,11 +27,10 @@ class Veneer {
     this.newCSS = this.newCSS.bind(this)
 
     chrome.tabs.query({ active: true }, (tabs) => {
-      let a = document.createElement('a')
-      a.href = tabs[0].url
-      this.currentUrl = urlBar.value = a.host
+      this.currentUrl = urlBar.value = url.parse(tabs[0].url).host
 
       editor.on('change', this.newCSS)
+      themeBtn.addEventListener('click', this.themes)
       settingsBtn.addEventListener('click', this.settings)
       removeBtn.addEventListener('click', this.removeStorage)
     })
@@ -41,17 +41,20 @@ class Veneer {
       if (res['CustomCSS']) {
         try {
           JSON.parse(res['CustomCSS'])
-            .map((item) => {
-              if (item.url === this.currentUrl) {
-                editor.getDoc().setValue(atob(item.CSS))
-              }
-            })
+            .map((item) => item.url === this.currentUrl && editor.getDoc().setValue(atob(item.CSS)))
         } catch (e) {
           this.removeStorage()
         }
       }
     })
   }
+
+  themes () {
+    chrome.tabs.create({url:"../templates/themes.html"}, function (tab) {
+      console.log(tab)
+    })
+  }
+
 
   removeStorage () {
     chrome.storage.sync.remove('CustomCSS', () => {
@@ -80,9 +83,7 @@ class Veneer {
         storage = JSON.parse(res['CustomCSS'])
 
         storage
-          .filter((item) =>{
-            return item.url === this.currentUrl
-          })
+          .filter(item => item.url === this.currentUrl)
           .map((item) => {
             changed = true
             item.CSS = btoa(editor.getValue())
@@ -91,7 +92,7 @@ class Veneer {
       }
 
       if (!changed) {
-        var b64 = btoa(editor.getValue())
+        let b64 = btoa(editor.getValue())
 
         storage.push({
           'url': this.currentUrl,
@@ -105,17 +106,18 @@ class Veneer {
 
   settings () {
     this.settingsToggle = !this.settingsToggle
+    let codeContainer = document.querySelector('.code-container')
+    let settingsContainer = document.querySelector('.settings-container')
+    let storageMeter = document.querySelector('.storage')
 
-    chrome.storage.sync.getBytesInUse('CustomCSS', (res) => {
-      document.querySelector('.storage').innerText = res + " / 8,192";
-    })
+    chrome.storage.sync.getBytesInUse('CustomCSS', usedSpace => storageMeter.innerText = `${usedSpace} / 8,192`)
 
     if (this.settingsToggle) {
-      document.querySelector('.code-container').style.display = "none";
-      document.querySelector('.settings-container').style.display = "block";
+      codeContainer.style.display = 'none'
+      settingsContainer.style.display = 'block'
     } else {
-      document.querySelector('.code-container').style.display = "block";
-      document.querySelector('.settings-container').style.display = "none";
+      codeContainer.style.display = 'block'
+      settingsContainer.style.display = 'none'
     }
   }
 }
