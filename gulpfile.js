@@ -19,8 +19,11 @@ gulp.task('move-themes', function() {
   gulp.src(['./app/js/themes.js'])
     .pipe(gulp.dest('./dist/js/'))
 
-  return gulp.src(['./app/css/themes.css'])
+  gulp.src(['./app/css/themes.css'])
     .pipe(gulp.dest('./dist/css/'))
+
+  gulp.src(['./app/templates/**.html'])
+    .pipe(gulp.dest('./dist/templates/'))
 })
 
 gulp.task('watch', ['build-ext'], function() {
