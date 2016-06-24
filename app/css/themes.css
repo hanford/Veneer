@@ -26,8 +26,7 @@ html, body {
 .card-container {
   width: 100%;
   max-width: 450px;
-  padding: 16px;
-  margin: 0 auto;
+  margin: 16px auto 0;
 }
 
 .card {
@@ -35,9 +34,10 @@ html, body {
   border-radius: 3px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.3);
   margin: 20px 0;
+  width: 300px;
   height: 120px;
+  margin: 0 auto;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-around;
-  cursor: pointer;
 }

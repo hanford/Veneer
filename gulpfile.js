@@ -22,6 +22,9 @@ gulp.task('move-themes', function() {
   gulp.src(['./app/css/themes.css'])
     .pipe(gulp.dest('./dist/css/'))
 
+  gulp.src(['./app/scripts/content.js'])
+    .pipe(gulp.dest('./dist/scripts/'))
+
   gulp.src(['./app/templates/**.html'])
     .pipe(gulp.dest('./dist/templates/'))
 })
