@@ -33,16 +33,15 @@ html, body {
   background: #FFF;
   border-radius: 3px;
   box-shadow: 0 3px 4px rgba(0,0,0,0.3);
-  margin: 20px 0;
+  margin: 20px auto;
   width: 300px;
   height: 80px;
-  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  transition: all 0.35s;
 }
-
 
 .xbttn {
   font-size: 12px;
@@ -52,4 +51,22 @@ html, body {
   right: 8px;
   top: 8px;
   cursor: pointer;
+}
+
+.swoosh-out {
+  animation-duration: 0.35s;
+  animation-name: swoosh;
+  animation-fill-mode: forwards;
+}
+
+@keyframes swoosh {
+  0% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
 }

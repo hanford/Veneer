@@ -40,8 +40,11 @@ class Themes {
   removeTheme (event, index) {
     const confirm = window.confirm(`Are you sure you want to deconste your theme for ${this.themes[index].url}?`)
     if (confirm) {
-      this.themes[index].CSS = ''
-      chrome.storage.sync.set({'CustomCSS': this.themes}, () => window.location.reload())
+      this.themes[index] = {}
+      chrome.storage.sync.set({'CustomCSS': JSON.stringify(this.themes)}, () => {
+        event.target.parentElement.classList.add('swoosh-out')
+        setTimeout(() => event.target.parentElement.remove(), 500)
+      })
     }
   }
 }
