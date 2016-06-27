@@ -123,5 +123,4 @@ class Veneer {
 }
 
 var veneer = new Veneer()
-
-return veneer.load()
+veneer.load()

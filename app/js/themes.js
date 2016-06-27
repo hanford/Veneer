@@ -1,35 +1,47 @@
-var themes
-var importBtn = document.querySelector('.import')
+class Themes {
+  constructor () {
+    chrome.storage.sync.get('CustomCSS', (res) => {
+      try {
+        this.themes = JSON.parse(res['CustomCSS'])
+        this.appendThemesToDom()
+      }
+      catch (e) {
+        console.log('No Themes!')
+      }
+    })
 
-function getThemes() {
-  chrome.storage.sync.get('CustomCSS', function (res) {
-    try {
-      themes = JSON.parse(res['CustomCSS'])
+    this.appendThemesToDom.bind(this)
+    this.saveToStorage.bind(this)
+    this.removeTheme.bind(this)
+  }
+
+  appendThemesToDom () {
+    let list = document.querySelector('.card-container')
+
+    this.themes.forEach((item, index) => {
+      let div = document.createElement('div')
+      let removeBtn = document.createElement('button')
+
+      removeBtn.innerText = 'X' //&#x2715;
+      removeBtn.addEventListener('click', () => this.removeTheme(event, index))
+
+      div.innerText = item.url
+      div.appendChild(removeBtn)
+      div.classList.add('card')
+      list.appendChild(div)
+    })
+  }
+
+  saveToStorage (strg) {
+    chrome.storage.sync.set({'CustomCSS': strg}, (res) => location.reload())
+  }
+
+  removeTheme (event, index) {
+    let confirm = window.confirm(`Are you sure you want to delete your theme for ${this.themes[index].url}?`)
+    if (confirm) {
+      chrome.storage.sync.set({'CustomCSS': strg}, (res) => location.reload()) 
     }
-    catch (e) {
-      console.log('No Themes!')
-    }
-    domThemes()
-  })
+  }
 }
 
-var domThemes = function() {
-  var list = document.querySelector('.card-container')
-
-  themes.forEach(function(item) {
-    var div = document.createElement('div')
-
-    div.innerText = item.url
-    div.classList.add('card')
-    list.appendChild(div)
-  })
-}
-
-function saveToStorage(strg) {
-  chrome.storage.sync.set({'CustomCSS': strg}, function (res) {
-    console.log("saved", strg);
-    location.reload();
-  });
-}
-
-getThemes()
+new Themes()
