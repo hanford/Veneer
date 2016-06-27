@@ -40,4 +40,16 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+
+.xbttn {
+  font-size: 12px;
+  background: transparent;
+  border: 0px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  cursor: pointer;
 }

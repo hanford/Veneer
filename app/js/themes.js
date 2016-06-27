@@ -16,14 +16,15 @@ class Themes {
   }
 
   appendThemesToDom () {
-    let list = document.querySelector('.card-container')
+    const list = document.querySelector('.card-container')
 
     this.themes.forEach((item, index) => {
       let div = document.createElement('div')
       let removeBtn = document.createElement('button')
 
-      removeBtn.innerText = 'X' //&#x2715;
+      removeBtn.innerHTML = '&#x2715';
       removeBtn.addEventListener('click', () => this.removeTheme(event, index))
+      removeBtn.classList.add('xbttn')
 
       div.innerText = item.url
       div.appendChild(removeBtn)
@@ -37,9 +38,10 @@ class Themes {
   }
 
   removeTheme (event, index) {
-    let confirm = window.confirm(`Are you sure you want to delete your theme for ${this.themes[index].url}?`)
+    const confirm = window.confirm(`Are you sure you want to deconste your theme for ${this.themes[index].url}?`)
     if (confirm) {
-      chrome.storage.sync.set({'CustomCSS': strg}, (res) => location.reload()) 
+      this.themes[index].CSS = ''
+      chrome.storage.sync.set({'CustomCSS': this.themes}, () => window.location.reload())
     }
   }
 }
